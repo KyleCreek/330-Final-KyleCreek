@@ -11,24 +11,67 @@
 3. Description of what the technical components your project will be, including the routes, the data models, and any external sources you'll use
 
 - Routes:
--   /login
--   /signup
--   bet/newBet
--   bet/viewBets (Stretch)
--   bet/acceptBet
+-----------------------------------------------------------------
+-  /auth/signup: Route that Allows use to sign up for Application
+    - POST
+        - 400 Error Code for Empty or Missing Password
+        - 200 for Positive Sign Up
+        - 409 for Non-Unique Email Address.
+-   auth/login: Route Signs users in to Application and Returns Token
+    - POST
+        - 400 Error for Empty or Missing Password
+        - 401 When Password Doesn't Match
+        - 200 & "res.body.token" with Token when Good Password is Provided.
+
+- /bet/: User Specific CRUD Operations for Bets
+  - POST: Allows users to Create a New Bet
+      - 200 Code when Bet is created Successfully
+      - 400 Code when a Required Field is Missing
+      - 401 When Token is Missing, or Bad
+  - GET: Allows Users to View ALL Their Own Bets
+      - 200 Code and List of All Bets
+      - 401 When Token is Missing or Bad
+
+- /bet/:id: Perform CRUD Operations on all Bets, MUST be owner of the Bet, OR An ADMIN User
+  - GET
+      - 401 with bad or missing token
+      - 200 with bet for admin or owner 
+  - PUT
+      - 401 with bad or missing token
+      - 200 with bet for admin or owner
+  - DELETE
+      - 401 with bad or missing token
+      - 200 for admin or owner. 
+ 
+  
+- /parlay/: Perform CRUD Operations on PARLAY - which are a combination of BETS. MUst be Owner of Parlay OR Admin to perform CRUD Operations
+  - POST
+  - GET
+  - PUT
+  - DELETE
 
 - Data Models:
+-----------------------------------------------------------------
 -   User:
--     First Name (String)
--     Last Name (String)
--     Email (String / Unique)
--     Password (Encrypted String)
--     Account Balance (Integer)
--   Bet:
--     _id (Mongoose Object)
--     BetInitiator (Mongoose User Object)
--     BetAcceptor (Mongood User Object)
--     Cost (Integer)
+  - _id (Mongoose Object)  
+  - First Name (String)
+  - Last Name (String)
+  - Email (String / Unique)
+  - Password (Encrypted String)
+  - Account Balance (Integer)
+
+- Bet:
+  - _id (Mongoose Object)
+  - BetInitiator (Mongoose User Object)
+  - BetAcceptor (Mongood User Object) - Optional Parameter
+  - Price (Integer)
+
+- Parlay:
+  - _id (Mongoose Object)
+  - parlayInitiator (Mongoose User Object)
+  - parlayBets (List of Mongood Bets)
+  - parlayCost (Integer)
+  
 
 6. Clear and Direct Call outs of how you will meet various Project Requirements.
 
