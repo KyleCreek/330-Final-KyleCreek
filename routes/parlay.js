@@ -29,3 +29,5 @@ const deleteParlay = [];
 router.delete("/:id", deleteParlay, async(req, res, next) => {
     console.log("Delete Single Parlay");
 });
+
+module.exports = router;

@@ -29,3 +29,5 @@ const deleteBet = [];
 router.delete("/:id", deleteBet, async(req, res, next) => {
     console.log("Delete Single Bet");
 });
+
+module.exports = router;
