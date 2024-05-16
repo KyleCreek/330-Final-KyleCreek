@@ -9,6 +9,7 @@ const betSchema = new mongoose.Schema({
         ref: "user",
         required: false,
     },
+    terms: {type: String, required: true}, 
     price: { type: Number, required: true},
 });
 
