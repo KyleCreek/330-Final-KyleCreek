@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const JSONSECRET = 'kyleSecret';
 
 const betDAO = require('../daos/bet');
+const userDAO = require('../daos/user');
 
 // Verifies a user is authorized
 async function isAuthorized (req, res, next){
@@ -34,11 +35,13 @@ async function isAuthorized (req, res, next){
 const postBets = [ isAuthorized ];
 router.post("/", postBets, async(req, res, next) => {
     try{
+        const user = await userDAO.getUser(req.body.email);
         // Create a Bet Object to Send to the DAO
-        const betObj = {"betInitiator": req.body.id,
+        const betObj = {
+            "betInitiator": user._id,
             "terms": req.body.terms,
             "price": req.body.price
-         }
+        }
         const betResponse = await betDAO.createBet(betObj);
         res.json(betResponse);
         res.status(200);
