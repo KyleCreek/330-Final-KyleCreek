@@ -4,6 +4,8 @@ const router = Router({ mergeParams: true });
 const jwt = require('jsonwebtoken');
 const JSONSECRET = 'kyleSecret';
 
+const betDAO = require('../daos/bet');
+
 // Verifies a user is authorized
 async function isAuthorized (req, res, next){
     const authHeader = req.headers.authorization;
@@ -17,10 +19,10 @@ async function isAuthorized (req, res, next){
         if (!decoded){
             res.status(401).send("Invalid Token Provided");
         } else {
-            console.log("here is the decoded token", decoded);
             req.body.email = decoded['email'];
             req.body.id = decoded['_id'];
-            req.body.roles = decoded['roles']
+            req.body.roles = decoded['roles'];
+            req.body.accountBalance = decoded['accountBalance'];
             next();
         }
     } else {
@@ -32,7 +34,14 @@ async function isAuthorized (req, res, next){
 const postBets = [ isAuthorized ];
 router.post("/", postBets, async(req, res, next) => {
     try{
-        console.log("Post ALL Bets");
+        // Create a Bet Object to Send to the DAO
+        const betObj = {"betInitiator": req.body.id,
+            "terms": req.body.terms,
+            "price": req.body.price
+         }
+        const betResponse = await betDAO.createBet(betObj);
+        res.json(betResponse);
+        res.status(200);
 
     } catch(e) {
         console.log(e);

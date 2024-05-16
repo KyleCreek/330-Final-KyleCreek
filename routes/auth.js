@@ -61,7 +61,8 @@ router.post("/login", postLogin, async(req, res, next) => {
             // If the passwords Match, we need to generate an additional Token. 
             if (result) {
                 // Note to self - may need to review the generation of this secret. 
-                const data = {"_id": user["_id"], "email": user["email"], "roles": user["roles"]}
+                const data = {"_id": user["_id"], "email": user["email"], "accountBalance": user["accountBalance"], "roles": user["roles"]}
+                console.log("here is json Data", data);
                 const token = jwt.sign(data, JSONSECRET);
                 const tokenJSON = { "token": token}
                 res.json(tokenJSON);
