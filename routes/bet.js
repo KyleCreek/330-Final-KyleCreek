@@ -32,13 +32,25 @@ async function isAuthorized (req, res, next){
 
 }
 
-const postBets = [ isAuthorized ];
+// Appends the User Information to the Request Body
+async function userSearch (req, res, next) {
+    try {
+        const user = await userDAO.getUser(req.body.email);
+        req.body.user = user;
+        next();
+
+    } catch (e){
+        return e
+    }
+
+}
+
+const postBets = [ isAuthorized, userSearch ];
 router.post("/", postBets, async(req, res, next) => {
     try{
-        const user = await userDAO.getUser(req.body.email);
         // Create a Bet Object to Send to the DAO
         const betObj = {
-            "betInitiator": user._id,
+            "betInitiator": req.body.user._id,
             "terms": req.body.terms,
             "price": req.body.price
         }
@@ -54,9 +66,13 @@ router.post("/", postBets, async(req, res, next) => {
 });
 
 
-const getBets = [];
+const getBets = [ isAuthorized, userSearch ];
 router.get("/", getBets, async(req, res, next) => {
+    console.log("here is the user from middle ware", req.body.user)
     console.log("Get ALL Bets");
+    const returnBets = await betDAO.getUserBets(req.body.user._id)
+    res.json(returnBets);
+    res.status(200);
 });
 
 const getBet = [];

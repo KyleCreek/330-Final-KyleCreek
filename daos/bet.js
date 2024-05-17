@@ -14,3 +14,12 @@ module.exports.createBet = async (betObj) => {
         return e;
     }
 }
+
+module.exports.getUserBets = async (userId) => {
+    try {
+        return await Bet.find({betInitiator: userId}).lean();
+
+    } catch (e) {
+        return e
+    }
+}
