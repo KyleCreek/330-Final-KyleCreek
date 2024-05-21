@@ -68,16 +68,39 @@ router.post("/", postBets, async(req, res, next) => {
 
 const getBets = [ isAuthorized, userSearch ];
 router.get("/", getBets, async(req, res, next) => {
-    console.log("here is the user from middle ware", req.body.user)
-    console.log("Get ALL Bets");
-    const returnBets = await betDAO.getUserBets(req.body.user._id)
-    res.json(returnBets);
-    res.status(200);
+    if (req.body.roles.includes('admin')){
+        const adminBets = await betDAO.getAllBets();
+        res.json(adminBets);
+        res.status(200);
+
+    } else {
+        const returnBets = await betDAO.getUserBets(req.body.user._id)
+        res.json(returnBets);
+        res.status(200);
+    }
 });
 
-const getBet = [];
+const getBet = [ isAuthorized ];
 router.get("/:id", getBet, async(req, res, next) => {
-    console.log("Get Single Bet");
+    try {
+        if (req.body.roles.includes('admin')){
+            const returnBet = await betDAO.getSingleBet(req.params.id);
+            res.json(returnBet);
+            res.status(200);
+        } else {
+            const returnBet = await betDAO.getSingleBet(req.params.id);
+            // *** Need to add Bet Acceptor as an Option. 
+            if (req.body.id === returnBet.betInitiator.toString()){
+                res.json(returnBet);
+                res.status(200);
+            } else {
+                res.status(403)
+            }
+        }
+
+    } catch (e){
+        res.status(404);
+    }
 });
 
 const editBet = [];
