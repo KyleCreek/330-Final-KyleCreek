@@ -3,14 +3,9 @@ const User = require("../models/user");
 module.exports = {};
 
 module.exports.createUser = async (userObj) => {
-    try{
-        userObj['roles'] = ['user'];
-        userObj['accountBalance'] = 0;
-        console.log('user obj prior to commit', userObj);
-        return await User.create(userObj);
-    } catch (e) {
-        return e;
-    }
+    userObj['roles'] = ['user'];
+    userObj['accountBalance'] = 0;
+    return await User.create(userObj);
 }
 
 // Should get a user record using their email

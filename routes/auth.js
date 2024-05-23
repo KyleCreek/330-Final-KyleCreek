@@ -30,8 +30,6 @@ async function emptyPassword (req, res, next) {
     }
 };
 
-
-
 const postSignup = [ emptyPassword ];
 router.post("/signup", postSignup, async(req, res, next) => {
     const userObj = req.body;
