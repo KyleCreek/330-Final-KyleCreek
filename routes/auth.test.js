@@ -143,8 +143,6 @@ describe("/auth", () => {
     });
   });
 
-  /*
-  // Below is what I'm Finishing testing for 5/22
   describe("After both users login", () => {
     let token0;
     let token1;
@@ -156,6 +154,9 @@ describe("/auth", () => {
       const res1 = await request(server).post("/auth/login").send(user1);
       token1 = res1.body.token;
     });
+    });
+
+/*
 
     describe("PUT /password", () => {
       it("should reject bogus token", async () => {
