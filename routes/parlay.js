@@ -10,10 +10,10 @@ router.post("/", postParlay, async(req, res, next) => {
 });
 
 
-//const getParlays = [];
-//router.get("/", getParlays, async(req, res, next) => {
-//    console.log("Get ALL Parlays");
-//});
+const getParlays = [];
+router.get("/", getParlays, async(req, res, next) => {
+    console.log("Get ALL Parlays");
+});
 
 const getParlay = [];
 router.get("/:id", getParlay, async(req, res, next) => {
