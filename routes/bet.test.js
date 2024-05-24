@@ -18,60 +18,52 @@ describe("Testing Books Enpoints", () => {
     const bet0 = { terms: "Bet0 Bet Terms", price: 100 };
     const bet1 = { terms: "Bet1 Bet Terms", price: 69 };
 
-    describe("POST /bet", () => {
-        it("Should Reject a Bet Without a term", async () => {
+    describe("POST /bet/", () => {
+        it("Should Reject a Bet without Terms", () => {
 
         });
-        it("Should reject a Bet without a Price", async () => {
-
-        })
-
-    });
-    describe("GET /bet", () => {
-        it("Should Only Return Non Admin User Bets", async () =>{
+        it("Should Reject a Bet Without a Price", () => {
 
         });
-        it("Should return ALL Bets for Admin User", async () => {
+        it("Should Create a Bet with all Required Fields", () => {
 
         });
 
     });
-    descibe("GET /bet/:id", () => {
-        it("Should only Return Bets that belong to the User (Non-Admin)", async () => {
+    describe("GET /bet/", () => {
+        it("Should Return ALL Bets to an Admin User", async () => {
 
         });
-        it("Should Not allow Non-Admin Users to access Bets they don't own", async () => {
+        it("Should not Return Anything to a Non Admin User", async () => {
 
         });
-        it("Should allow an Admin User to Get ALL Bets", async () => {
-
-        });
-
     });
-    descibe("PUT /bet/:id", () => {
-        it("Should only allow Users to edit their own Bets (Non-Admin", async => {
+    describe("GET /bet/:id", () =>{
+        it("Should Not allow users to view bets of which they are not participants", async () => {
 
         });
-        it("Should prevent a Non-Admin User from editing a Bet they don't own", async => {
+        it("Should allow users to view bets of which they are participants", async () => {
 
         });
-        it("Should allow an Admin User to edit any bet", async => {
+        it("Should allow an Admin user to view any bet", async () => {
 
         });
 
     });
     describe("DELETE /bet/:id", () => {
-        it("Should only allow Users to delete their own Bets (Non-Admin", async => {
+        it("Will Not allow Non Admin Users to DELETE Bet", async () => {
 
         });
-        it("Should prevent a Non-Admin User from Deleting a Bet they don't own", async => {
+        it("Will allow admin user to DELETE bet", async () => {
 
         });
-        it("Should allow an Admin User to Delete any bet", async => {
-
-        });
-
     });
+    describe("PUT /bet/:id", () => {
+        it("Should Prevent Non-Admin User From EDITING Bet", async => {
 
+        });
+        it("Should Allow Admin User to EDIT Bet", async () => {
 
+        });
+    });
 });

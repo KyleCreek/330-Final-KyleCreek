@@ -35,28 +35,7 @@ describe("/auth", () => {
         expect(res.statusCode).toEqual(401);
       });
     });
-    /*
-    // This is a Test that has been used in Previous Assignments
-    // But it is not a route in my stuff. 
-    describe("PUT /password", () => {
-      it("should return 401", async () => {
-        const res = await request(server).put("/auth/password").send(user0);
-        expect(res.statusCode).toEqual(401);
-      });
-    });
-    */
-   /*
-   // This is also a test that is in Previous Tests,
-   // But not currently in my routes. 
-    describe("POST /logout", () => {
-      it("should return 404", async () => {
-        const res = await request(server).post("/auth/logout").send();
-        expect(res.statusCode).toEqual(404);
-      });
-    });
-    */
   });
-
 
   describe("signup ", () => {
     describe("POST /auth/signup", () => {
@@ -96,6 +75,7 @@ describe("/auth", () => {
       });
     });
   });
+
   describe.each([user0, user1])("User %#", (user) => {
     beforeEach(async () => {
       await request(server).post("/auth/signup").send(user0);
@@ -142,70 +122,4 @@ describe("/auth", () => {
       });
     });
   });
-
-  describe("After both users login", () => {
-    let token0;
-    let token1;
-    beforeEach(async () => {
-      await request(server).post("/auth/signup").send(user0);
-      const res0 = await request(server).post("/auth/login").send(user0);
-      token0 = res0.body.token;
-      await request(server).post("/auth/signup").send(user1);
-      const res1 = await request(server).post("/auth/login").send(user1);
-      token1 = res1.body.token;
-    });
-    });
-
-/*
-
-    describe("PUT /password", () => {
-      it("should reject bogus token", async () => {
-        const res = await request(server)
-          .put("/auth/password")
-          .set("Authorization", "Bearer BAD")
-          .send({ password: "123" });
-        expect(res.statusCode).toEqual(401);
-      });
-      it("should reject empty password", async () => {
-        const res = await request(server)
-          .put("/auth/password")
-          .set("Authorization", "Bearer " + token0)
-          .send({ password: "" });
-        expect(res.statusCode).toEqual(400);
-      });
-      it("should change password for user0", async () => {
-        const res = await request(server)
-          .put("/auth/password")
-          .set("Authorization", "Bearer " + token0)
-          .send({ password: "123" });
-        expect(res.statusCode).toEqual(200);
-        let loginRes0 = await request(server).post("/auth/login").send(user0);
-        expect(loginRes0.statusCode).toEqual(401);
-        loginRes0 = await request(server).post("/auth/login").send({
-          email: user0.email,
-          password: "123",
-        });
-        expect(loginRes0.statusCode).toEqual(200);
-        const loginRes1 = await request(server).post("/auth/login").send(user1);
-        expect(loginRes1.statusCode).toEqual(200);
-      });
-      it("should change password for user1", async () => {
-        const res = await request(server)
-          .put("/auth/password")
-          .set("Authorization", "Bearer " + token1)
-          .send({ password: "123" });
-        expect(res.statusCode).toEqual(200);
-        const loginRes0 = await request(server).post("/auth/login").send(user0);
-        expect(loginRes0.statusCode).toEqual(200);
-        let loginRes1 = await request(server).post("/auth/login").send(user1);
-        expect(loginRes1.statusCode).toEqual(401);
-        loginRes1 = await request(server).post("/auth/login").send({
-          email: user1.email,
-          password: "123",
-        });
-        expect(loginRes1.statusCode).toEqual(200);
-      });
-    });
-  });
-  */
 });

@@ -46,6 +46,8 @@ async function userSearch (req, res, next) {
 }
 
 const postBets = [ isAuthorized, userSearch ];
+// - Note 5/23: Need to Detemine how to handle Rejections
+// Doea it happen in the DAO or in the Route. 
 router.post("/", postBets, async(req, res, next) => {
     try{
         // Create a Bet Object to Send to the DAO
@@ -110,7 +112,11 @@ router.put("/:id", editBet, async(req, res, next) => {
 
 const deleteBet = [];
 router.delete("/:id", deleteBet, async(req, res, next) => {
-    console.log("Delete Single Bet");
+    try {
+        console.log('delete route');
+    } catch(e) {
+        return e;
+    }
 });
 
 module.exports = router;
