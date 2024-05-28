@@ -1,5 +1,32 @@
 # 330-Final-KyleCreek
 
+Week 8 - Proof of Concept Update.
+
+What has Been Completed:
+-------------------------------
+- All Model Schemas have been defined
+- General Express FrameWork has been established (Server / Router / test-utils, etc).
+- Local Mongo connection ha been established (Still needs to be Set up for Host Server)
+- Data Acceess Object Files have Frame Work. Some are partially complete
+- All CRUD Operations for /bet and /parlay have been defined (Not within their Routes, but the Testing has determined the required end points).
+- Authorization Routes, DAOs, Associated Tests have been completed.
+- /Bet end point routes, DAO, and testing end points have been partially completed
+- /Parlay end point routes and testing end points have been partially defined.
+- Partial Completion of POSTMAN End Point Testing
+
+What Remains to Be Completed:
+--------------------------------
+- Complete /Bet End Points / DAOs / Test Script
+- Complete /Parlay End Points / DAOs / Test Script
+- Finish associated POSTMAN end point tests (For Demonstration).
+- Upload Completed (and tested) Code to Railways
+- Verify end points with POSTMAN Tests
+- Complete associated Slides / Presentation for Final Project
+- Update Final Project "Read Me".
+- Turn in Assignment for completion. 
+
+
+
 1. Description of the Scenario Project is Operating In.
 
 - This project is intended to mimic a piece of an application I have long dreamt about but failed to ever develop. The concept of this application is essentially the "Tinder for Gambling". In this operating environment, users create bets that can be swiped on by other random users in the internet. It is intended to mimic the in person, peer to peer, low stakes gambling.
