@@ -34,7 +34,11 @@ describe("Testing Parlay Enpoints", () => {
         it("Admin: Should Return All Parlays", async () => {
 
         });
+    });
     describe("GET /parlay/:id", () => {
+        it("Should return a 404 IF the Parlay ID Does Not Exist", async () =>{
+
+        });
         it("Non Admin: Only Owner Shall View Parlay", async () => {
 
         });
@@ -47,6 +51,9 @@ describe("Testing Parlay Enpoints", () => {
 
     });
     describe("DELETE /parlay/:id", () => {
+        it("Should return a 404 if the Parlay ID Does Not Exist", async() => {
+
+        });
         it("Non Admin: Should Not Allow User to DELETE Parlay", async () => {
 
         });
@@ -56,6 +63,9 @@ describe("Testing Parlay Enpoints", () => {
 
     });
     describe("PUT /parlay/:id", () => {
+        it("Should return a 404 if the Parlay ID does not exist", async () => {
+
+        });
         it("Non Admin: Should Not Allow User to EDIT Parlay", async () => {
 
         });
@@ -64,7 +74,4 @@ describe("Testing Parlay Enpoints", () => {
         });
 
     });
-
-    });
-
 });

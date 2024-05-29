@@ -105,6 +105,9 @@ router.get("/:id", getBet, async(req, res, next) => {
     }
 });
 
+// Note: Only Admin Users should be allowed to edit and delete Bets.
+// in a practical environment, a User would not be able to edit or delete their bet
+// Once posted. That's life baby. 
 const editBet = [];
 router.put("/:id", editBet, async(req, res, next) => {
     console.log("Edit Single Bet");

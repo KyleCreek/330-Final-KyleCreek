@@ -7,7 +7,7 @@
         "node": ">=18.0.0"
     },
     "scripts": {
-        "test": "jest --runInBand",
+        "test": "jest --runInBand --coverage --coverageDirectory='coverage'",
         "ci": "jest --json --runInBand | node .github/workflows/parseOutput.js",
         "tdd": "jest --watch --runInBand",
         "start": "node index.js"
@@ -27,6 +27,7 @@
     },
     "dependencies": {
         "bcrypt": "^5.1.1",
+        "crpyto": "^0.0.1-security",
         "express": "^4.18.2",
         "jsonwebtoken": "^9.0.0",
         "mongoose": "^7.1.0"

@@ -34,11 +34,17 @@ describe("Testing Books Enpoints", () => {
         it("Should Return ALL Bets to an Admin User", async () => {
 
         });
-        it("Should not Return Anything to a Non Admin User", async () => {
+        it("Should Return No Bets for Users that Don't have any active Bets", async () => {
+
+        });
+        it("Should return all bets that belong to the non admin user", async () => {
 
         });
     });
     describe("GET /bet/:id", () =>{
+        it("Should return a 404 if the Bet Does Not Exist", async () => {
+
+        });
         it("Should Not allow users to view bets of which they are not participants", async () => {
 
         });
@@ -51,6 +57,9 @@ describe("Testing Books Enpoints", () => {
 
     });
     describe("DELETE /bet/:id", () => {
+        it("Should return a 404 if the bet does not exist", async () => {
+
+        });
         it("Will Not allow Non Admin Users to DELETE Bet", async () => {
 
         });
@@ -59,6 +68,9 @@ describe("Testing Books Enpoints", () => {
         });
     });
     describe("PUT /bet/:id", () => {
+        it("Should return a 404 if the bet does not exist", async () => {
+
+        });
         it("Should Prevent Non-Admin User From EDITING Bet", async => {
 
         });
