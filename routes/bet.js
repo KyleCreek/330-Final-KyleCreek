@@ -10,7 +10,6 @@ const userDAO = require('../daos/user');
 // Verifies a user is authorized
 async function isAuthorized (req, res, next){
     const authHeader = req.headers.authorization;
-
     if (authHeader && authHeader.startsWith('Bearer ')){
         // Extract Token
         const token = authHeader.split(' ')[1];
