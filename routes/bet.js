@@ -44,7 +44,47 @@ async function userSearch (req, res, next) {
 
 }
 
-const postBets = [ isAuthorized, userSearch ];
+// Validate Bet Input - Terms
+async function termsValidate (req, res, next) {
+    if ('terms' in req.body === false) {
+        res.status(400).send("Terms are required to Place a Bet");
+    } else if (req.body['terms'] === '') {
+        res.status(400).send("Terms cannot be an empty string");
+    } else {
+        next();
+    }
+};
+
+// Validate Bet Input - Price
+async function priceValidate (req, res, next) {
+    if ("price" in req.body === false) {
+        res.status(400).send("Terms are required to Place a Bet");
+    } else if (isNaN(parseInt(req.body['price']))) {
+        res.status(400).send("This is Not an Actual Number Doofus")
+    } else if (parseInt(req.body['price']) <= 0) {
+        res.status(400).send("Need to have a positive integer")
+    } else {
+        next();
+    }
+}
+
+// Validate a Bet Actually Exists
+async function checkBet (req, res, next) {
+    try {
+        const betResponse = await betDAO.getSingleBet(req.params.id);
+        if (betResponse) {
+            console.log("Bet Is Valid");
+            next();
+        } else {
+            res.status(404).send("Bet Does Not Exist")
+        }
+    } catch(e){
+        console.log(e);
+        return e;
+    }
+};
+
+const postBets = [ isAuthorized, userSearch, termsValidate, priceValidate ];
 // - Note 5/23: Need to Detemine how to handle Rejections
 // Doea it happen in the DAO or in the Route. 
 router.post("/", postBets, async(req, res, next) => {
@@ -81,10 +121,12 @@ router.get("/", getBets, async(req, res, next) => {
     }
 });
 
-const getBet = [ isAuthorized ];
+const getBet = [ isAuthorized, checkBet ];
 router.get("/:id", getBet, async(req, res, next) => {
     try {
+        console.log("Here is req.body in get/id", req.body);
         if (req.body.roles.includes('admin')){
+            console.log("Checking Bet with admin token");
             const returnBet = await betDAO.getSingleBet(req.params.id);
             res.json(returnBet);
             res.status(200);
@@ -92,6 +134,9 @@ router.get("/:id", getBet, async(req, res, next) => {
             const returnBet = await betDAO.getSingleBet(req.params.id);
             // *** Need to add Bet Acceptor as an Option. 
             if (req.body.id === returnBet.betInitiator.toString()){
+                res.json(returnBet);
+                res.status(200);
+            } else if (req.body.id = returnBet.betAcceptor.toString()){ 
                 res.json(returnBet);
                 res.status(200);
             } else {

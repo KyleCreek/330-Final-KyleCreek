@@ -37,6 +37,6 @@ module.exports.getSingleBet = async(betId) => {
         return await Bet.findOne({_id:betId}).lean();
 
     } catch(e) {
-        return e;
+        console.log(e);
     }
 }
