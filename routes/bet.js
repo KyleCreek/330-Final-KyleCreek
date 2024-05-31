@@ -73,7 +73,6 @@ async function checkBet (req, res, next) {
     try {
         const betResponse = await betDAO.getSingleBet(req.params.id);
         if (betResponse) {
-            console.log("Bet Is Valid");
             next();
         } else {
             res.status(404).send("Bet Does Not Exist")
@@ -124,26 +123,27 @@ router.get("/", getBets, async(req, res, next) => {
 const getBet = [ isAuthorized, checkBet ];
 router.get("/:id", getBet, async(req, res, next) => {
     try {
-        console.log("Here is req.body in get/id", req.body);
         if (req.body.roles.includes('admin')){
-            console.log("Checking Bet with admin token");
             const returnBet = await betDAO.getSingleBet(req.params.id);
             res.json(returnBet);
             res.status(200);
         } else {
             const returnBet = await betDAO.getSingleBet(req.params.id);
-            // *** Need to add Bet Acceptor as an Option. 
             if (req.body.id === returnBet.betInitiator.toString()){
                 res.json(returnBet);
                 res.status(200);
-            } else if (req.body.id = returnBet.betAcceptor.toString()){ 
-                res.json(returnBet);
-                res.status(200);
-            } else {
-                res.status(403)
-            }
-        }
+            } else if (returnBet.betAcceptor) { 
+                if (req.body.id === returnBet.betAcceptor.toString()){
+                    res.json(returnBet);
+                    res.status(200);
+                } else {
+                    res.status(403);
+                }
 
+            } else {
+                res.status(403).send("Unauthorized");
+            };
+        }
     } catch (e){
         res.status(404);
     }
@@ -152,15 +152,23 @@ router.get("/:id", getBet, async(req, res, next) => {
 // Note: Only Admin Users should be allowed to edit and delete Bets.
 // in a practical environment, a User would not be able to edit or delete their bet
 // Once posted. That's life baby. 
-const editBet = [];
+const editBet = [ isAuthorized, checkBet ];
 router.put("/:id", editBet, async(req, res, next) => {
-    console.log("Edit Single Bet");
+    if (req.body.roles.includes('admin')){
+        console.log("admin User");
+    } else {
+        res.status(403).send("Unauthorized");
+    };
 });
 
-const deleteBet = [];
+const deleteBet = [ isAuthorized, checkBet ];
 router.delete("/:id", deleteBet, async(req, res, next) => {
     try {
-        console.log('delete route');
+        if (req.body.roles.includes('admin')){
+                console.log("admin User");
+            } else {
+                res.status(403).send("Unauthorized");
+            };
     } catch(e) {
         return e;
     }

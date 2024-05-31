@@ -169,10 +169,40 @@ describe("Testing Bet Enpoints AFTER Login", () => {
             expect(res.statusCode).toEqual(404);
         });
         it("Should Not allow users to view bets of which they are not participants", async () => {
-
+            const res = await request(server)
+                .post("/bet")
+                .set("Authorization", "Bearer " + adminToken)
+                .send(bet0);
+            const res2 = await request(server)
+                .get("/bet/" + res.body._id)
+                .set("Authorization", "Bearer " + token0)
+                .send();
+            expect(res2.status).toEqual(403);
         });
-        it("Should allow users to view bets of which they are participants", async () => {
 
+        it("Should allow Bet Initiator to view Bet", async () => {
+            // Create a Bet made by user0
+            const res = await request(server)
+                .post("/bet")
+                .set("Authorization", "Bearer " + token0)
+                .send(bet0);
+            const savedBet = await Bet.findOne( {_id: res.body._id }).lean();
+            // Call the Endpoint with the Admin Token
+            const res2 = await request(server)
+                .get("/bet/" + res.body._id)
+                .set("Authorization", "Bearer " + token0)
+                .send();
+            expect(res2.status).toEqual(200);
+            expect(res2.body).toMatchObject({
+                betInitiator: savedBet['betInitiator'].toString(),
+                betAcceptor: null,
+                terms: bet0['terms'],
+                price: bet0['price'],
+                _id: savedBet._id.toString()
+                });
+        });
+        // -- Probably need to add a bet to make sure this works for bet acceptor. 
+        it("Should allow Bet Acceptor to View Bet", async () => {
         });
         it("Should allow an Admin user to view any bet", async () => {
             // Create a Bet made by user0
@@ -198,10 +228,24 @@ describe("Testing Bet Enpoints AFTER Login", () => {
     });
     describe("DELETE /bet/:id", () => {
         it("Should return a 404 if the bet does not exist", async () => {
-
+            const res = await request(server)
+                .delete('/bet/2EF1EC23E0885FC7044A9B26')
+                .set("Authorization", "Bearer " + adminToken)
+                .send();
+            expect(res.statusCode).toEqual(404);
         });
         it("Will Not allow Non Admin Users to DELETE Bet", async () => {
-
+            // Create a Bet made by user0
+            const res = await request(server)
+                .post("/bet")
+                .set("Authorization", "Bearer " + token0)
+                .send(bet0);
+            // Call the Endpoint with the Admin Token
+            const res2 = await request(server)
+                .delete("/bet/" + res.body._id)
+                .set("Authorization", "Bearer " + token0)
+                .send();
+            expect(res2.status).toEqual(403);
         });
         it("Will allow admin user to DELETE bet", async () => {
 
@@ -209,10 +253,24 @@ describe("Testing Bet Enpoints AFTER Login", () => {
     });
     describe("PUT /bet/:id", () => {
         it("Should return a 404 if the bet does not exist", async () => {
-
+            const res = await request(server)
+                .delete('/bet/2EF1EC23E0885FC7044A9B26')
+                .set("Authorization", "Bearer " + adminToken)
+                .send();
+            expect(res.statusCode).toEqual(404);
         });
-        it("Should Prevent Non-Admin User From EDITING Bet", async => {
-
+        it("Should Prevent Non-Admin User From EDITING Bet", async () => {
+            // Create a Bet made by user0
+            const res = await request(server)
+                .post("/bet")
+                .set("Authorization", "Bearer " + token0)
+                .send(bet0);
+            // Call the Endpoint with the Admin Token
+            const res2 = await request(server)
+                .put("/bet/" + res.body._id)
+                .set("Authorization", "Bearer " + token0)
+                .send();
+            expect(res2.status).toEqual(403);
         });
         it("Should Allow Admin User to EDIT Bet", async () => {
 

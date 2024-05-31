@@ -40,3 +40,12 @@ module.exports.getSingleBet = async(betId) => {
         console.log(e);
     }
 }
+
+module.exports.deleteBet = async(betId) => {
+    try{
+        console.log("deleteBet");
+
+    } catch(e) {
+        return e;
+    }
+}
