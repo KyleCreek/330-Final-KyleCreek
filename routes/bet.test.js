@@ -4,7 +4,7 @@ var jwt = require("jsonwebtoken");
 const server = require("../server");
 const testUtils = require("../test-utils");
 
-const User = require("../models/bet");
+const User = require("../models/user");
 const Bet = require("../models/bet");
 
 describe("Testing Bet Endpoints BEFORE Login", () =>{
@@ -88,12 +88,8 @@ describe("Testing Bet Enpoints AFTER Login", () => {
         token0 = res0.body.token;
         await request(server).post("/auth/signup").send(adminUser);
         const test1 = await User.find().lean();
-        console.log("Here is the mongoose Search", test1);
-        // Note: Thers is something Goofy Happening with these searches and I can't Figure out WHy. 
         const adminRoles = { roles: ['admin', 'user' ]};
-        const test = await User.updateOne(
-          { email: adminUser.email }, adminRoles);
-        console.log("Here is the test", test);
+        await User.updateOne({ email: adminUser.email }, adminRoles);
         const res1 = await request(server).post("/auth/login").send(adminUser);
         adminToken = res1.body.token;
       });
