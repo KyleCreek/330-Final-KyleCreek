@@ -165,7 +165,8 @@ const deleteBet = [ isAuthorized, checkBet ];
 router.delete("/:id", deleteBet, async(req, res, next) => {
     try {
         if (req.body.roles.includes('admin')){
-                console.log("admin User");
+                const deleteResponse = await betDAO.deleteBet(req.params.id);
+                res.sendStatus(400);
             } else {
                 res.status(403).send("Unauthorized");
             };
