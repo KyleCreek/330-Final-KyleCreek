@@ -17,7 +17,10 @@ module.exports.createBet = async (betObj) => {
 
 module.exports.getUserBets = async (userId) => {
     try {
-        return await Bet.find({betInitiator: userId}).lean();
+        return await Bet.aggregate([{$match: {$or: [ 
+            {betAcceptor: userId },
+            {betInitiator: userId }
+        ]}}]);
 
     } catch (e) {
         return e

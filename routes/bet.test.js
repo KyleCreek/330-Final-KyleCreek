@@ -163,14 +163,42 @@ describe("Testing Bet Enpoints AFTER Login", () => {
     });
     describe("GET /bet/", () => {
         it("Should Return ALL Bets to an Admin User", async () => {
-
-
-        });
-        it("Should Return No Bets for Users that Don't have any active Bets", async () => {
-
+            // Add Both Bets to the database
+            const res1 = await request(server)
+                .post("/bet")
+                .set("Authorization", "Bearer " + token0)
+                .send(bet0);
+            const res2 = await request(server)
+                .post("/bet")
+                .set("Authorization", "Bearer " + token0)
+                .send(bet1);
+            // Make a call with the Admin TOken
+            const res3 = await request(server)
+                .get("/bet")
+                .set("Authorization", "Bearer " + adminToken)
+                .send();
+            // Verify a 200 Response is Recived
+            expect(res3.statusCode).toEqual(200);
+            expect(res3.body.length).toEqual(2);
         });
         it("Should return all bets that belong to the non admin user", async () => {
-
+            // Create two Bets/ one from admin the other from non admin
+            const res1 = await request(server)
+                .post("/bet")
+                .set("Authorization", "Bearer " + token0)
+                .send(bet0);
+            const res2 = await request(server)
+                .post("/bet")
+                .set("Authorization", "Bearer " + adminToken)
+                .send(bet1);
+            // Make a Call with the Non Admin Token
+            const res3 = await request(server)
+                .get("/bet")
+                .set("Authorization", "Bearer " + token0)
+                .send();
+            // Verify a 200 Response w/ only one bet is Recieved
+            expect(res3.statusCode).toEqual(200);
+            expect(res3.body.length).toEqual(1);
         });
     });
     describe("GET /bet/:id", () =>{
