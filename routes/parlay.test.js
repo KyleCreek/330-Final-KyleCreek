@@ -225,15 +225,16 @@ describe("Testing Parlay Endpoints AFTER Log In", () => {
             await request(server)
             .post('/parlay')
             .set("Authorization", "Bearer " + token1)
-            .send([bet0Object._id, bet1Object._id, bet3Object._id]);
+            .send([bet0Object._id, bet1Object._id, bet2Object._id]);
             // Call the "Get" Endpoint with User 1 Token
             const res = await request(server)
                 .get("/parlay")
                 .set("Authorization", "Bearer " + token0)
                 .send();
-            // -- Expectations
-            // Expect the Right Parlay is Provided
+            // -- Expectations            
+            // Expect the Right Parlay is Provided -- Need to validate the Content at a later date.
             // Expect that only one Parlay Is returned
+            expect(res.body.length).toEqual(1);
             // Expect the Status Code to be 200
             expect(res.statusCode).toEqual(200);
 
@@ -248,25 +249,49 @@ describe("Testing Parlay Endpoints AFTER Log In", () => {
             expect(res.statusCode).toEqual(404);
         });
         it("Non Admin: Only Owner Shall View Parlay", async () => {
-            // Create a Parlay with User0
-
-            // Create a Parlay with User 1
-
+            // Create a Parlay from User 0
+            const user0Parlay = await request(server)
+            .post('/parlay')
+            .set("Authorization", "Bearer " + token0)
+            .send([bet0Object._id, bet1Object._id, bet3Object._id]);
             // Call User0 Parlay with User1 Credential
+            const res = await request(server)
+                .get('/parlay/' + user0Parlay.body._id)
+                .set("Authorization", "Bearer " + token1)
+                .send()
+            // - Expectations
+            expect(res.statusCode).toEqual(401)
         });
         it("Non Admin: User shall view their own Parlay", async () => {
-            // Create a Parlay with User0
-
-            // Create a Parlay with User 1
-
-            // Call User0 Parlay with User0 Credential
+            // Create a Parlay from User 0
+            const user0Parlay = await request(server)
+            .post('/parlay')
+            .set("Authorization", "Bearer " + token0)
+            .send([bet0Object._id, bet1Object._id, bet3Object._id]);
+            // Call User0 Parlay with User1 Credential
+            const res = await request(server)
+                .get('/parlay/' + user0Parlay.body._id)
+                .set("Authorization", "Bearer " + token0)
+                .send()
+            // - Expectations
+            expect(res.statusCode).toEqual(200)
+            // -- Need to add a verification of the Content
 
         });
         it("Admin: Admin Users Shall View all Parlays", async () => {
-            // Create a Parlay with User0
-
-            // Call User0 Parlay with admin Credential
-
+            // Create a Parlay from User 0
+            const user0Parlay = await request(server)
+                .post('/parlay')
+                .set("Authorization", "Bearer " + token0)
+                .send([bet0Object._id, bet1Object._id, bet3Object._id]);
+            // Call User0 Parlay with Admin Credential
+            const res = await request(server)
+                .get('/parlay/' + user0Parlay.body._id)
+                .set("Authorization", "Bearer " + adminToken)
+                .send()
+            // - Expectations
+            // -- Need to add content Verification
+            expect(res.statusCode).toEqual(200)
         });
 
     });
@@ -282,10 +307,9 @@ describe("Testing Parlay Endpoints AFTER Log In", () => {
         it("Non Admin: Should Not Allow User to EDIT Parlay", async () => {
             // Create a Parlay with User0
             const res = await request(server)
-            .post('/parlay')
-            .set("Authorization", "Bearer " + token0)
-            .send([bet0Object._id, bet1Object._id, bet2Object._id]);
-            console.log("in PUT", res.body);
+                .post('/parlay')
+                .set("Authorization", "Bearer " + token0)
+                .send([bet0Object._id, bet1Object._id, bet2Object._id]);
             // Call User0 Parlay with User0 Credential
             const res2 = await request(server)
                 .put("/parlay/" + res.body._id)
@@ -308,10 +332,32 @@ describe("Testing Parlay Endpoints AFTER Log In", () => {
             expect(res.statusCode).toEqual(404);
         });
         it("Non Admin: Should Not Allow User to DELETE Parlay", async () => {
-
+            // Create a Parlay with User0
+            const res = await request(server)
+            .post('/parlay')
+            .set("Authorization", "Bearer " + token0)
+            .send([bet0Object._id, bet1Object._id, bet2Object._id]);
+            // Call User0 Parlay with User0 Credential
+            const res2 = await request(server)
+                .delete("/parlay/" + res.body._id)
+                .set("Authorization", "Bearer " + token0)
+                .send()
+            // Expect a 401
+            expect(res2.statusCode).toEqual(401);
         });
         it("Admin: Should Allow Admin to DELETE Parlay", async () => {
-
+            // Create a Parlay with User0
+            const res = await request(server)
+                .post('/parlay')
+                .set("Authorization", "Bearer " + token0)
+                .send([bet0Object._id, bet1Object._id, bet2Object._id]);
+            // Call User0 Parlay with admin redential
+            const res2 = await request(server)
+                .delete("/parlay/" + res.body._id)
+                .set("Authorization", "Bearer " + adminToken)
+                .send()
+            // Expect a 401
+            expect(res2.statusCode).toEqual(204);
         });
 
     });

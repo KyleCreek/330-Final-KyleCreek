@@ -7,6 +7,7 @@ const JSONSECRET = 'kyleSecret';
 // Data Access Objects
 const betDAO = require("../daos/bet");
 const parlayDAO = require("../daos/parlay");
+const userDAO = require("../daos/user");
 
 // -- Middleware Functions
 // Verifies a user is authorized
@@ -33,6 +34,19 @@ async function isAuthorized (req, res, next){
         }
     } else {
         res.status(401).send("token is not present");
+    }
+
+};
+
+// Appends the User Information to the Request Body
+async function userSearch (req, res, next) {
+    try {
+        const userObj = await userDAO.getUser(req.body.user.email);
+        req.body.userObject = userObj;
+        next();
+
+    } catch (e){
+        return e
     }
 
 };
@@ -94,29 +108,40 @@ router.post("/", postParlay, async(req, res, next) => {
 });
 
 
-const getParlays = [ isAuthorized ];
+const getParlays = [ isAuthorized, userSearch ];
 router.get("/", getParlays, async(req, res, next) => {
     if (req.body.user.roles.includes('admin')){
         const response = await parlayDAO.getAllParlays();
         res.json(response);
         res.status(200);
     } else {
-        res.status(400).send("Not Done Developing THis yet");
+        const response = await parlayDAO.getUserParlay(req.body.userObject._id);
+        res.json(response);
+        res.status(200);
     }
 });
 
 const getParlay = [ isAuthorized, checkParlay ];
 router.get("/:id", getParlay, async(req, res, next) => {
-    console.log("Body in GET/ID", req.body);
-    res.status(200);
+    if (req.body.user.roles.includes('admin')){
+        res.json(req.body.parlay);
+        res.status(200);
+    // Verifies that a Non-Admin User is the owner of the Parlay
+    } else {
+        if (req.body.user.userId === req.body.parlay.parlayInitiator.toString()){
+            res.json(req.body.parlay);
+            res.status(200);
+        } else {
+            res.status(401).send("Unathorized");
+        }
+    }
 });
 
 const editParlay = [ isAuthorized, checkParlay ];
 router.put("/:id", editParlay, async(req, res, next) => {
-    console.log("in Put route", req.body);
+    //console.log("in Put route", req.body);
     if (req.body.user.roles.includes('admin')){
-        const response = await parlayDAO.getAllParlays();
-        res.json(response);
+        // Make Call to the DAO
         res.status(200);
     } else {
         res.status(401).send("Unathorized");
@@ -126,9 +151,8 @@ router.put("/:id", editParlay, async(req, res, next) => {
 const deleteParlay = [ isAuthorized, checkParlay ];
 router.delete("/:id", deleteParlay, async(req, res, next) => {
     if (req.body.user.roles.includes('admin')){
-        const response = await parlayDAO.getAllParlays();
-        res.json(response);
-        res.status(200);
+        const deleteResponse = await parlayDAO.deleteParlay(req.params.id);
+        res.sendStatus(204);
     } else {
         res.status(401).send("Unauthorized");
     }

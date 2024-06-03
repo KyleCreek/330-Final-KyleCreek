@@ -21,7 +21,7 @@ module.exports.getAllParlays = async() =>{
     }
 };
 
-module.exports.getSingleParlay = async(parlayId) =>{
+module.exports.getSingleParlay = async(parlayId) => {
     try{
         return await Parlay.findOne( {_id : parlayId}).lean();
 
@@ -29,3 +29,20 @@ module.exports.getSingleParlay = async(parlayId) =>{
         return e;
     }
 };
+
+module.exports.getUserParlay = async(userId) => {
+    try{
+        return await Parlay.aggregate([{$match: {parlayInitiator: userId}}]);
+    } catch (e) {
+        return e;
+    }
+};
+
+module.exports.deleteParlay = async(parlayId) => {
+    try {
+        return await Parlay.deleteOne( { _id: parlayId } );
+
+    } catch (e) {
+        return e;
+    }
+}
