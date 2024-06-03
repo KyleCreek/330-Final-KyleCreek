@@ -137,12 +137,17 @@ router.get("/:id", getParlay, async(req, res, next) => {
     }
 });
 
+// Note: Only Admin Users should be allowed to edit and delete Bets.
+// in a practical environment, a User would not be able to edit or delete their bet
+// Once posted. That's life baby. 
+
+// Since this is controlled strictly by Admin, it is assumed that the Edits will be 
+// Sent to the End Point with the Desired End Object Configuration.
 const editParlay = [ isAuthorized, checkParlay ];
 router.put("/:id", editParlay, async(req, res, next) => {
-    //console.log("in Put route", req.body);
     if (req.body.user.roles.includes('admin')){
-        // Make Call to the DAO
-        res.status(200);
+        const editParlay = await parlayDAO.editParlay(req.params.id, req.body.revisions)
+        res.sendStatus(202);
     } else {
         res.status(401).send("Unathorized");
     }

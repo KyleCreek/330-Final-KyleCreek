@@ -38,6 +38,14 @@ module.exports.getUserParlay = async(userId) => {
     }
 };
 
+module.exports.editParlay = async (parlayId, parlayObj) => {
+    try {
+        return await Parlay.updateOne( { _id: parlayId }, parlayObj);
+    } catch (e) {
+        return e;
+    }
+}
+
 module.exports.deleteParlay = async(parlayId) => {
     try {
         return await Parlay.deleteOne( { _id: parlayId } );

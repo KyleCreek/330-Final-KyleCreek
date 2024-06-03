@@ -43,6 +43,14 @@ module.exports.getSingleBet = async(betId) => {
         console.log(e);
     }
 }
+module.exports.editBet = async (betId, betObj) => {
+    try{
+        return await Bet.updateOne( { _id: betId }, betObj);
+    } catch (e) {
+        return e
+    }
+}
+
 
 module.exports.deleteBet = async(betId) => {
     try{

@@ -345,7 +345,7 @@ describe("Testing Bet Enpoints AFTER Login", () => {
                 .post("/bet")
                 .set("Authorization", "Bearer " + token0)
                 .send(bet0);
-            // Call the Endpoint with the Admin Token
+            // Call the Endpoint with the Non Admin Token
             const res2 = await request(server)
                 .put("/bet/" + res.body._id)
                 .set("Authorization", "Bearer " + token0)
@@ -353,6 +353,23 @@ describe("Testing Bet Enpoints AFTER Login", () => {
             expect(res2.status).toEqual(403);
         });
         it("Should Allow Admin User to EDIT Bet", async () => {
+            // Create a Bet made by user0
+            const res = await request(server)
+                .post("/bet")
+                .set("Authorization", "Bearer " + token0)
+                .send(bet0);
+            let revisedBet = res.body;
+            revisedBet.price = 123456789;
+            // Call the Endpoint with the Admin Token
+            const res2 = await request(server)
+                .put("/bet/" + res.body._id)
+                .set("Authorization", "Bearer " + adminToken)
+                .send({ revisions: revisedBet });
+            const dbResponse = await Bet.findOne( { _id: res.body._id }).lean();
+            // Verify Status Code
+            expect(res2.status).toEqual(202);
+            // Verify that the price changed
+            expect(dbResponse.price).toEqual(123456789);
 
         });
     });

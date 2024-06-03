@@ -152,10 +152,13 @@ router.get("/:id", getBet, async(req, res, next) => {
 // Note: Only Admin Users should be allowed to edit and delete Bets.
 // in a practical environment, a User would not be able to edit or delete their bet
 // Once posted. That's life baby. 
+// Since this is controlled strictly by Admin, it is assumed that the Edits will be 
+// Sent to the End Point with the Desired End Object Configuration.
 const editBet = [ isAuthorized, checkBet ];
 router.put("/:id", editBet, async(req, res, next) => {
     if (req.body.roles.includes('admin')){
-        console.log("admin User");
+        await betDAO.editBet(req.params.id, req.body.revisions);
+        res.sendStatus(202);
     } else {
         res.status(403).send("Unauthorized");
     };

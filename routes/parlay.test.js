@@ -14,7 +14,6 @@ describe("Testing Parlay Endpoints BEFORE Log In", () => {
     afterEach(testUtils.clearDB);
 
     const parlay1 = {};
-    const parlay2 = {};
 
     describe("POST /parlay/", () => {
         it("Should send a 401 without a Token", async () => {
@@ -320,7 +319,25 @@ describe("Testing Parlay Endpoints AFTER Log In", () => {
     
         });
         it("Admin: Should Allow Admin to EDIT Parlay", async () => {
-
+            // Create a Parlay with User0
+            const res = await request(server)
+                .post('/parlay')
+                .set("Authorization", "Bearer " + token0)
+                .send([bet0Object._id, bet1Object._id, bet2Object._id]);
+            // Edit the Parlay with the Admin User
+            let revisedParlay = res.body
+            revisedParlay.parlayBets.push(bet3Object._id);
+            const res2 = await request(server)
+                .put("/parlay/" + res.body._id.toString())
+                .set("Authorization", "Bearer " + adminToken)
+                .send( { revisions: revisedParlay });
+            // Verification
+            const dbResponse = await Parlay.findOne( { _id: res.body._id});
+            // Status Code
+            expect(res2.statusCode).toEqual(202);
+            // We added an ID to the Object, so we just need to ensure that the update has the right ID and Length
+            expect(dbResponse.parlayBets.length).toEqual(4);
+           
         });
     });
     describe("DELETE /parlay/:id", () => {
@@ -351,13 +368,16 @@ describe("Testing Parlay Endpoints AFTER Log In", () => {
                 .post('/parlay')
                 .set("Authorization", "Bearer " + token0)
                 .send([bet0Object._id, bet1Object._id, bet2Object._id]);
-            // Call User0 Parlay with admin redential
+            // Call User0 Parlay with admin credential
             const res2 = await request(server)
                 .delete("/parlay/" + res.body._id)
                 .set("Authorization", "Bearer " + adminToken)
                 .send()
             // Expect a 401
             expect(res2.statusCode).toEqual(204);
+            // Verify that the Record has been deleted. 
+            const lastCheck = await Parlay.findOne( { _id: res.body._id});
+            expect(lastCheck).toBeNull();
         });
 
     });
