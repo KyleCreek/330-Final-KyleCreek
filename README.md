@@ -1,4 +1,12 @@
 # 330-Final-KyleCreek
+Week 10 Final Project Thoughts:
+-------------------------------
+- Railway App Generate Domain: 330-final-kylecreek-production.up.railway.app
+- Self Evaluation:
+  - What I Learned:
+  - What I would Improve Upon:
+  - What Worked Well:
+  - What Didn't Work Well:
 
 Week 8 - Proof of Concept Update.
 

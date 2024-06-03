@@ -2,6 +2,7 @@ const server = require("./server");
 const mongoose = require("mongoose");
 
 const port = process.env.PORT || 3000;
+const mongoURL = process.env.MONGO_CONNECTION_STRING || 'mongodb://127.0.0.1/330-Final-KyleCreek';
 
 mongoose
   .connect("mongodb://127.0.0.1/330-Final-Creek", {})
