@@ -1,12 +1,24 @@
 # 330-Final-KyleCreek
 Week 10 Final Project Thoughts:
 -------------------------------
-- Railway App Generate Domain: 330-final-kylecreek-production.up.railway.app
+- Railway App Generated Domain: 330-final-kylecreek-production.up.railway.app
+- 
 - Self Evaluation:
+- 
   - What I Learned:
+      - Through this project the sheer amount of time / thought that must go into an API is massive - I gained an appreciation for the scope of developing and maintaing a production level API. Further I learned the value in test driven development. While writing the tests was more time consuming (in comparison to our assignments where they are provided) I get a much better idea in how the end points are going to be used. This additional foresight makes it easier to develop the end points themselves. 
+
   - What I would Improve Upon:
+    
+     - To improve this project I would do two things. The first would be to develop a CI Pipeline for the associated github page. Given this is a portfolio project, I think it would be a nice addition to have on display for potential employers. Additionally - I would create a Simple front end utilizing the lessons learned from previous quarters for sing up, log in, create bets and View bets. These are both simple additions that can be easily created given additional time. 
+
   - What Worked Well:
+    - Test Driven Development. It was mentioned above but the additional foresight required in test driven development made this project a lot easier than trying to copy / paste code from old assignments or going directly into a coding practice. Version control via git was also very nice. I didn't always have access to the same machine to work on this project - so having the discipline to constantly upload my changes to git allowed me to constantly have access to this project while on the go. 
+   
+    
   - What Didn't Work Well:
+    - My railway application seems to be on a little bit shaky ground. During the initial deployment and presentation in class the deployment has crashed atleast once. I also think I could add a few more controls to the databseses to maintain unique controls. Finally, additional business logic could have been extended to the "Bet" Object, but this would be difficult, for various reasons related to gambling.
+    - 
 
 Week 8 - Proof of Concept Update.
 
